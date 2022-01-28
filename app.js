@@ -1,3 +1,5 @@
+// const { json } = require("body-parser");
+
 // Selectors
 const puzzleBoard = document.querySelector('#puzzle');
 const solveButton = document.querySelector('#solve-button');
@@ -9,8 +11,8 @@ const submission = [];
 for (let i = 0; i < squares; i++) {
     const inputElement = document.createElement('input');
     inputElement.setAttribute('type', 'number');
-    inputElement.setAttribute('min', 1);
-    inputElement.setAttribute('max', 9);
+    inputElement.setAttribute('min', '1');
+    inputElement.setAttribute('max', '9');
     if (
         ((i % 9 == 0 || i % 9 == 1 || i % 9 == 2) && i < 21) ||
         ((i % 9 == 6 || i % 9 == 7 || i % 9 == 8) && i < 27) ||
@@ -33,7 +35,9 @@ const joinValues = () => {
             submission.push('.');
         }
     })
+    console.log(submission)
 }
+
 
 const populateValues = (isSolvable, solution) => {
     const inputs = document.querySelectorAll('input');
@@ -49,33 +53,33 @@ const populateValues = (isSolvable, solution) => {
 }
 
 const solve = () => {
-    const axios = require("axios").default;
+
+    joinValues()
+    const data = {numbers: submission.join('')}
+    console.log('data', data)
+
+    fetch('http://localhost:8000/solve', {
+        method: 'POST', 
+        headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }, 
+        body: JSON.stringify(data)
+    })  
+    .then(response => response.json())
+    .then(data => {
+        console.log(data)
+        populateValues(data.solvable, data.solution)
+        submission = []
+    })
+    .catch((error) => {
+        console.error('Error:', error)
+    })
+}
+
+solveButton.addEventListener('click', solve);
 
 
-    joinValues();
-    const data = submission.join('');
-    const options = {
-    method: 'POST',
-    url: 'https://solve-sudoku.p.rapidapi.com/',
-    headers: {
-        'content-type': 'application/json',
-        'x-rapidapi-host': 'solve-sudoku.p.rapidapi.com',
-        'x-rapidapi-key': '65059a14f4msh8040cda6acebc99p12c6c4jsnc8b6dfe475d8'
-    },
-    data: {
-        puzzle: data
-    }
-    };
-
-    axios.request(options).then((response) => {
-        console.log(response.data);
-        populateValues(response.data.solvable, response.data.solution)
-    }).catch((error) => {
-        console.error(error);
-    });
-    }
-
-    solveButton.addEventListener('click', solve);
 
 
 
