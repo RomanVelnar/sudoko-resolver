@@ -26,6 +26,12 @@ for (let i = 0; i < squares; i++) {
     puzzleBoard.appendChild(inputElement);
 }
 
+let wrapper = document.createElement('div')
+puzzleBoard.parentNode.insertBefore(wrapper, puzzleBoard)
+wrapper.appendChild(puzzleBoard)
+
+wrapper.className = "puzzle"
+
 const joinValues = () => {
     const inputs = document.querySelectorAll('input');
     inputs.forEach(input => {
