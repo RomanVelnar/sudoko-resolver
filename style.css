@@ -17,14 +17,14 @@
     flex-direction: column;
 }
 
-.puzzle {
-    
-
-}
-
 #puzzle {
     width: 450px;
     height: 450px;
+}
+
+.puzzle {
+    border: 2px black solid;
+
 }
 
 #puzzle input {
